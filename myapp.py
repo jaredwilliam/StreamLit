@@ -15,7 +15,7 @@ Shown are the stock closing price and volume of Google!
 """)
 
 # Define ticker symbol
-tickerSymbol = 'GOOGL'
+tickerSymbol = 'AAPL'
 
 # Get data on this ticker
 tickerData = yf.Ticker(tickerSymbol)
