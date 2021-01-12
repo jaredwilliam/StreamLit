@@ -45,3 +45,35 @@ else:
 # This will be useful for he encoding phase
 penguins_raw = pd.read_csv('penguins_cleaned.csv')
 penguins = penguins_raw.drop(columns='species')
+df = pd.concat([input_df, penguins], axis=0)
+
+# Encoding of orginal Features
+encode = ['sex', 'island']
+for col in encode:
+    dummy = pd.get_dummies(df[col], prefix=col)
+    df = pd.concat([df,dummy], axis=1)
+    del df[col]
+df = df[:1] # Selects only the first row (the user input data)
+
+# Displays the user input features
+st.subheader('User Input Features')
+
+if uploaded_file is not None:
+    st.write(df)
+else:
+    st.write('Awating CSV file to be uploaded. Currently using example input parameters, shown below.')
+    st.write(df)
+
+# Reads in saved classification model
+load_clf = pickle.load(open('penguins_clf.pkl', 'rb'))
+
+# Apply model to make predictions
+prediction = load_clf.predict(df)
+prediction_proba = load_clf.predict_proba(df)
+
+st.subheader('Prediction')
+penguins_species = np.array(['Adelie', 'Chinstrap', 'Gentoo'])
+st.write(penguins_species[prediction])
+
+st.subheader('Prediction Probability')
+st.write(prediction_proba)
